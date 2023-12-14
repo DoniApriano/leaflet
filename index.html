@@ -52,25 +52,35 @@
         mymap.addControl(drawControl);
 
         mymap.on('draw:created', function (e) {
-            var type = e.layerType;
             var layer = e.layer;
+            var coords;
 
-            drawnItems.addLayer(layer);
+            if (layer instanceof L.Polygon || layer instanceof L.Polyline) {
+                coords = layer.getLatLngs()[0];
+            } else if (layer instanceof L.Marker || layer instanceof L.Circle || layer instanceof L.Rectangle) {
+                coords = layer.getLatLng();
+            }
 
-            var coords = layer.getLatLngs()[0];
+            mymap.addLayer(layer);
 
-            document.getElementById('coor').innerHTML = coords.toString()
+            console.log('Drawn:', coords); 
+            var str = JSON.stringify(coords)
+            var obj = JSON.parse(str)
+            console.log(obj); 
+            console.log(obj[0].lat);
+
         });
 
-        mymap.on('draw:edited', function (e) {
-            var layers = e.layers;
 
-            layers.eachLayer(function (layer) {
-                var coords = layer.getLatLngs()[0];
+        // mymap.on('draw:edited', function (e) {
+        //     var layers = e.layers;
 
-                document.getElementById('coor').innerHTML = coords.toString()
-            });
-        });
+        //     layers.eachLayer(function (layer) {
+        //         var coords = layer.getLatLngs()[0];
+
+
+        //     });
+        // });
     </script>
 
 </body>
